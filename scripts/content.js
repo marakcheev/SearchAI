@@ -1,6 +1,16 @@
-// import {createHTMLElem, callGpt} from './util.js';
 
-const apiKey = "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";
+
+setKey = async (key) => {
+    await chrome.storage.local.set({ apikey: key }, () => {
+        console.log("Api key stored in chrome storage");
+    });
+};
+
+getKey = async () => {
+    const data = await chrome.storage.local.get('apikey');
+    console.log("Retrieved api key from storage");
+    return data.apikey;
+};
 
 function createHTMLElem(){
 
@@ -91,13 +101,13 @@ function makeGenerateButton(){
     console.log("Button Added");
 }
 
-async function getGPT(query){
+async function getGPT(query, key){
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
         mode: 'cors',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${apiKey}`,
+            'Authorization': `Bearer ${key}`,
         },
         body: JSON.stringify({
             model: 'gpt-3.5-turbo',
@@ -111,22 +121,23 @@ async function getGPT(query){
         return data.choices[0].message.content;
     } else {
         console.error(`GPT failed. Status:${response.status}`);
+        throw Error ("Error fetching OpenAi result.");
     }
 }
 
-async function callGpt(text){
+async function callGpt(text, key){
     console.log("Calling GPT API...");
     const gptQuery = `You are a google search assistant. If the following search is a question, give a precise answer in under 3 sentences. If it asks to define something, define it in under 2 sentences. If it's anything else, give a short explanation of the topic (example person, place or thing) in under 3 sentences. Here's the question: '${text}'`;
     console.log(`gptQuery: ${gptQuery}`);
     
-    return getGPT(gptQuery);
+    return getGPT(gptQuery, key);
 }
 
-async function requestLongerResponse(originalrequest, gptAnswer){
+async function requestLongerResponse(originalrequest, gptAnswer, key){
     console.log("Calling GPT API...");
     const gptQuery = "This is a follow up to a past conversation with prompt: \n'" + `You are a google search assistant. If the following search is a question, give a precise answer in under 3 sentences. If it asks to define something, define it in under 2 sentences. If it's anything else, give a short explanation of the topic (example person, place or thing) in under 3 sentences. Here's the question: '${originalrequest}'` + " \n and you answered: \n" + `'${gptAnswer}` + " \n ' Now give a more detailed response to the same question without repeating anything, simply add on to what you've said before. Hard limit: 7 sentences. ";
 
-    return getGPT(gptQuery);
+    return getGPT(gptQuery, key);
 }
 
 function delay(ms) {
@@ -142,9 +153,23 @@ async function typeOutResult(text, element){
     }
 }
 
+function openAiError(){
+    const answerBox = document.getElementById("AnswerBox");
+    answerBox.innerText = "";
+    const openAIErrorMessage = " Error fetching data from OpenAI. Please try again at a later date."
+
+    typeOutResult(openAIErrorMessage, answerBox);
+}
+
 (async() => {
+    console.log("searchGPT Start");
+
+    const apiKey = await getKey();
+    // const json = await loadJson("secrets.json");
+    // console.log(json.apiKey);
+
     const searchBox = document.querySelector("textarea");
-    console.log("SearchGPT Start");
+    // console.log("SearchGPT Start");
 
     if (searchBox) {
         const elem = createHTMLElem("");
@@ -155,21 +180,29 @@ async function typeOutResult(text, element){
         answerBox.innerText = "Generating..."
 
         // const gptAnswer = "Hello, I am your AI assistant.";
-        const gptAnswer = await callGpt(text); 
+        var gptAnswer = "";
+        try{
+            gptAnswer = await callGpt(text, apiKey); 
+            answerBox.innerText = "";
 
-        answerBox.innerText = "";
+            typeOutResult(gptAnswer, answerBox);
 
-        typeOutResult(gptAnswer, answerBox);
+            delay(50);
+            makeGenerateButton();
+        }
+        catch(error){
+            openAiError();
+        }
 
-        delay(50);
-        makeGenerateButton();
+        
 
         const generateMoreButton = document.getElementById("button");
+        //Very occasionally says "Sure!" or "okay" at the start of the longer response.
         
         generateMoreButton.onclick = async function() {
             generateMoreButton.innerText = "Generating..."
             
-            const gptNewAnswer = await requestLongerResponse(text, gptAnswer);
+            const gptNewAnswer = await requestLongerResponse(text, gptAnswer, apiKey);
 
             generateMoreButton.style.display='none'; //Hide button
             
