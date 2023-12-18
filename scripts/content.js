@@ -163,6 +163,8 @@ function openAiError(){
 
 (async() => {
     console.log("searchGPT Start");
+    
+    // setKey("");
 
     const apiKey = await getKey();
     // const json = await loadJson("secrets.json");
