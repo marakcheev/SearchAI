@@ -1,1 +1,1 @@
-# searchGPT
+# SearchGPT
