@@ -116,14 +116,49 @@ async function getGPT(query, key){
     });
 
     if (response.ok) {
-        console.log("GPT Success.");
+        console.log("GPT Success. ");
         const data = await response.json();
+        console.log(data.choices[0].message.content);
         return data.choices[0].message.content;
     } else {
         console.error(`GPT failed. Status:${response.status}`);
         throw Error ("Error fetching OpenAi result.");
     }
 }
+
+//Bold after asterisk
+const boldAfterAsterisk = (str) => {
+    const words = str.split(/\s+/); // Split the string into an array of words
+
+    for (let i = 0; i < words.length; i++) {
+        // Check if the word starts with an asterisk
+        if (words[i].startsWith('*')) {
+            // Remove the asterisk and wrap the word in <b> tags
+            words[i] = '<b>' + words[i].substring(1) + '</b>';
+        }
+    }
+
+    // Join the array of words back into a string
+    return words.join(' ');
+};
+
+// Add asterisks (*) before each important word in the following response:
+
+// ---
+
+// {response}
+
+// ---
+
+// For example, if the original response is "Yes, apples are healthy for you and are a great source of fibres." and you want to highlight "Yes", "are", "healthy, "great", "source", "fibres" the filled-in prompt would look like this:
+
+
+// *Yes, apples *are *healthy for you and are a *great *source of *fibres.
+
+// If there are multiple sentences in the result, only highlight in the first sentence.
+
+//You're a person in charge of making answers easier to read. For the next answer, place an * before some words that could be valuable and answer a question. Here's the response:
+
 
 async function callGpt(text, key){
     console.log("Calling GPT API...");
@@ -139,6 +174,116 @@ async function requestLongerResponse(originalrequest, gptAnswer, key){
 
     return getGPT(gptQuery, key);
 }
+
+
+
+//----------------------------------------------------
+//Saving Questions
+
+
+async function saveQuestionAndAnswer(question, answer) {
+    
+    
+    const result = await chrome.storage.local.get({ questions: [], answers: [] });
+
+    var questions = result.questions;
+    var answers = result.answers;
+
+    questions.push(question);
+    answers.push(answer);
+
+    chrome.storage.local.set({ questions: questions, answers: answers });
+
+    
+}
+
+async function getQuestionsList(){
+    
+    return new Promise((resolve) => {
+        chrome.storage.local.get({ questions: [] }, function(result) {
+            const questionsList = result.questions || []; // Use a default value in case questions is undefined
+            // const isSaved = questions.includes(question);
+            resolve(questionsList);
+            // callback(isSaved);
+        });
+    });   
+}
+
+async function getAnswersList(){
+
+    return new Promise((resolve) => {
+        chrome.storage.local.get({ answers: [] }, function(result) {
+            const answersList = result.answers || []; // Use a default value in case questions is undefined
+            // const isSaved = questions.includes(question);
+            resolve(answersList);
+            // callback(isSaved);
+        });
+    });
+}
+
+async function isQuestionSaved(question) {
+    // const questions = await chrome.storage.local.get("questions");
+    // return questions.includes(question);
+
+    return new Promise((resolve) => {
+        chrome.storage.local.get({ questions: [] }, function(result) {
+            const questions = result.questions || []; // Use a default value in case questions is undefined
+            // const isSaved = questions.includes(question);
+            resolve(questions.includes(question));
+            // callback(isSaved);
+        });
+    });
+    // return false;
+}
+
+async function getAnswerForQuestion(question) {
+
+    // chrome.storage.local.get({ questions: [], answers: [] }, await function(result) {
+    //     const questionsList = result.questions || [];
+    //     const answersList = result.answers || [];
+        
+    //     
+        
+    // });
+
+    const questionsList = await getQuestionsList();
+    const answersList = await getAnswersList();
+
+    const index = questionsList.indexOf(question);
+
+    console.log(index);
+
+    if (index !== -1) {
+        console.log("GOT FROM BANK: " + answersList[index]);
+        return answersList[index];
+    }
+
+    return "Error retrieving answer from storage"; // Question not found
+
+    
+}
+
+async function removeOldQandA(){
+    const questionsList = await getQuestionsList();
+    const answersList = await getAnswersList();
+
+    while (questionsList.length > 5 ) {
+        questionsList.shift(); // Removes the first element of the array
+        answersList.shift();
+
+        console.log(questionsList);
+        console.log(answersList);
+    }
+
+    chrome.storage.local.set({ questions: questionsList, answers: answersList });
+
+
+}
+
+
+
+
+//----------------------------------------------------
 
 function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -162,9 +307,17 @@ function openAiError(){
 }
 
 (async() => {
-    console.log("searchGPT Start");
     
-    // setKey("");
+
+    console.log("searchGPT Start");
+
+    // const answersList = await getAnswersList();
+    // answersList.shift();
+    // await chrome.storage.local.set({ answers: answersList }, () => {
+    //     console.log("Api key stored in chrome storage");
+    // });
+    
+    // setKey(" Enter Key Here");
 
     const apiKey = await getKey();
     // const json = await loadJson("secrets.json");
@@ -183,21 +336,39 @@ function openAiError(){
 
         // const gptAnswer = "Hello, I am your AI assistant.";
         var gptAnswer = "";
-        try{
-            gptAnswer = await callGpt(text, apiKey); 
+
+        if (await isQuestionSaved(text)){
             answerBox.innerText = "";
 
-            typeOutResult(gptAnswer, answerBox);
+            const answer = await getAnswerForQuestion(text);
+
+            typeOutResult(answer, answerBox);
 
             delay(50);
             makeGenerateButton();
         }
-        catch(error){
-            openAiError();
+        else{
+            try{
+                gptAnswer = await callGpt(text, apiKey); 
+                answerBox.innerText = "";
+    
+                await typeOutResult(gptAnswer, answerBox);
+    
+                delay(50);
+                makeGenerateButton();
+    
+                await saveQuestionAndAnswer(text, gptAnswer);
+                removeOldQandA();
+
+            }
+            catch(error){
+                openAiError();
+            }
+    
         }
 
-        
 
+        
         const generateMoreButton = document.getElementById("button");
         //Very occasionally says "Sure!" or "okay" at the start of the longer response.
         
@@ -212,5 +383,22 @@ function openAiError(){
 
             typeOutResult(gptNewAnswer, answerBox);
         };
+
+        // await chrome.runtime.onSuspend.addListener(function() {
+        //     chrome.storage.local.set({ questions: [""], answers: [""] });
+        // });
+
+
+        //------------------------------------------------------------
+        //Clears
+
+        // await chrome.storage.local.set({ questions: []}, () => {
+        //     console.log("Cleared Questions");
+        // });
+    
+        // await chrome.storage.local.set({ answers: []}, () => {
+        //     console.log("Cleared Answers");
+        // });
+
     }
 })();

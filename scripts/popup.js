@@ -37,13 +37,13 @@ document.addEventListener('DOMContentLoaded', async function() {
     
     saveButton.addEventListener('click', function() {
         // Get the value from the text box
-        var apiKey = document.getElementById('apiKey').value;
+        var newApiKey = document.getElementById('apiKey').value;
 
         // Perform your desired actions with the API key
         // console.log('API Key:', apiKey);
 
-        if (notWhitespace(apiKey)){
-            setKey(apiKey);
+        if (notWhitespace(newApiKey)){
+            setKey(newApiKey);
         }
         else{
             console.log("Empty");
