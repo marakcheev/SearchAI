@@ -7,20 +7,37 @@
                 border: 0px solid #000000;
                 
                 /* border-right: 1px solid #000000; */
-                background-color: #4f4f4f;
+                background-color: #f5f5f5;
             }
 
             body {
                 width: 300px;  /* Set your desired width */
                 height: 300px; /* Set your desired height */
+
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                /* justify-content: center; */
+                margin: 0;
             }
 
             h1 {
-            padding-left: 5px; /* Add padding to the h1 element */
-            font-family: "arial";
+            font-family: "Google Sans";
             font-weight: normal;
             font-size: x-large;
-            color: white;
+            color: rgb(0, 0, 0);
+            }
+
+            #topBar{
+                background-color: #ffffff;
+                width: 300px;
+                border-bottom-left-radius: 15px;
+                border-bottom-right-radius: 15px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+                margin-bottom: 20px;
             }
 /* 
             label {
@@ -36,7 +53,8 @@
                 background-color: #757575;
                 color: #ffffff;
                 border-radius: 10px;
-                width: 215px;
+                width: 200px;
+                margin-left: 5px;
             }
 
             button {
@@ -46,18 +64,22 @@
                 border: none;
                 border-radius: 10px;
                 cursor: pointer;
-                width: 80px;
+                width: 75px;
+                margin-right: 5px;
             }
         </style>
     </head>
     <body>
-        <div>
+        <div id="topBar">
             <h1>
                 SeachGPT
             </h1>
+        </div>
+        <div>
+            
             <div class="input-container">
                 <input type="text" id="apiKey" placeholder="OpenAI API key">
-                <button id="saveButton">Save Key</button>
+                <button id="saveButton">Save</button>
             </div>
             
             <script src="scripts/popup.js" defer></script>
