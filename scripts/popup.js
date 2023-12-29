@@ -31,7 +31,8 @@ function censorKey(apiKey){
 
 document.addEventListener('DOMContentLoaded', async function() {
     const apiKey = await getKey();
-    document.getElementById('apiKey').value = censorKey(apiKey);
+    // document.getElementById('apiKey').value = censorKey(apiKey);
+    document.getElementById('apiKey').value = apiKey;
 
     var saveButton = document.getElementById('saveButton');
     
