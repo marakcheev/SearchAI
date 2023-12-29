@@ -31,7 +31,7 @@ function createHTMLElem(){
         resultBox.style.fontFamily = "Google Sans,arial,sans-serif";
         resultBox.style.backgroundColor = "#ffffff";
         resultBox.style.border = "2px solid #bababa";
-        resultBox.style.borderRadius = "10px";
+        resultBox.style.borderRadius = "18px";
         resultBox.style.padding = "10px";
         resultBox.style.marginTop = "10px";
         resultBox.style.marginBottom = "20px";
@@ -44,6 +44,7 @@ function createHTMLElem(){
         //Textbox "SearchGPT"
         const heading = document.createElement("h1");
         heading.textContent = "SearchGPT";
+        heading.style.fontFamily = "Google Sans, arial,sans-serif";
         heading.style.fontSize = "22px";
         // heading.style.marginTop = "8px";
 
@@ -61,9 +62,11 @@ function createHTMLElem(){
         answerBox.style.fontSize = getFontSize();
         answerBox.style.lineHeight = "22px";
 
-    const footer = document.createElement("footer")
-        footer.id = "footer";
+    const footer = document.createElement("div");
         footer.style.display = "block";
+        footer.textContent = "";
+        footer.id = "footer";
+        
 
     
     header.appendChild(heading);
@@ -97,18 +100,20 @@ function makeGenerateButton(){
     // const footer = document.getElementById("footer");
     
 
-    const button = document.createElement("gen_more_button");
+    const button = document.createElement("button");
     button.id = "button";
     button.innerHTML = "Generate more";
-    button.style.marginTop = "10px";
+    // button.style.marginTop = "10px";
     button.style.padding = "5px";
     button.style.paddingLeft = "10px";
     button.style.paddingRight = "10px";
-    button.style.borderRadius = "7px";
+    button.style.borderRadius = "10px";
     button.style.fontSize = "14px";
     button.style.backgroundColor = "#dadada";
     button.style.border = "0";
     button.style.cursor = 'pointer';
+    button.style.marginTop = "10px";
+    button.style.fontFamily = "Google Sans, arial,sans-serif";
 
     
     // footer.appendChild(button);
@@ -123,6 +128,7 @@ function makeGenerateButton(){
 function makeInfoIcon(){
 
     const footer = document.getElementById("footer");
+    const resultbox = document.getElementById("resultBox");
 
     const infoIcon = document.createElement('div');
     infoIcon.className = 'info-icon';
@@ -134,8 +140,8 @@ function makeInfoIcon(){
     infoIcon.style.borderRadius = "20px";
     infoIcon.style.marginTop = "10px";
     infoIcon.style.padding = "5px";
-    infoIcon.style.paddingLeft = "10px";
-    infoIcon.style.paddingRight = "10px";
+    infoIcon.style.paddingLeft = "11px";
+    infoIcon.style.paddingRight = "11px";
     infoIcon.style.fontSize = "14px";
     infoIcon.style.backgroundColor = "#dadada";
     infoIcon.style.border = "0";
@@ -148,18 +154,18 @@ function makeInfoIcon(){
     tooltip.style.display = 'none';
     tooltip.style.position = 'absolute';
     tooltip.style.bottom = '100%';
-    tooltip.style.left = '50%';
+    tooltip.style.width = "200px";
     tooltip.style.transform = 'translateX(-50%)';
     tooltip.style.backgroundColor = '#333';
     tooltip.style.color = '#fff';
-    tooltip.style.borderRadius = '6px';
-    tooltip.style.padding = '5px';
+    tooltip.style.borderRadius = '8px';
+    tooltip.style.padding = '8px';
     tooltip.textContent = 'SearchGPT can make mistakes. Consider checking important information.';
 
     // Append elements to the document
     infoIcon.appendChild(iconSpan);
     infoIcon.appendChild(tooltip);
-    footer.appendChild(infoIcon);
+    resultbox.appendChild(infoIcon);
 
     // Show the tooltip when hovering over the info icon
     infoIcon.addEventListener('mouseover', () => {
@@ -451,11 +457,16 @@ function openAiError(){
             
             const gptNewAnswer = await requestLongerResponse(text, gptAnswer, apiKey);
 
-            generateMoreButton.style.display='none'; //Hide button
+             //Hide button
             
             answerBox.innerText += "\n\n";
 
             typeOutResult(gptNewAnswer, answerBox);
+
+            generateMoreButton.style.visibility = 'hidden';
+
+            // answerBox.innerText += "\n\n";
+
         };
 
         // await chrome.runtime.onSuspend.addListener(function() {
