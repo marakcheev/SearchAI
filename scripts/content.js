@@ -22,15 +22,60 @@ async function getFontSize(){
     return data.fontSize;
 }
 
+function isColorDark(backgroundColor) {
+    // Extract RGB values from the background color string
+    const match = backgroundColor.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
+    
+    if (!match) {
+        throw new Error("Invalid RGB color format");
+    }
+
+    const [, red, green, blue] = match;
+
+    // Formula to calculate luminance
+    const luminance = 0.299 * red + 0.587 * green + 0.114 * blue;
+
+    // You can adjust the threshold based on your preference
+    const threshold = 128;
+
+    // Check if the luminance is below the threshold
+    return luminance < threshold;
+}
+
+function getAccentColor(){
+    const bodyBackgroundColor = window.getComputedStyle(document.body).backgroundColor;
+    
+    var accentColor; 
+
+    if (isColorDark(bodyBackgroundColor)){
+        console.log("darkness");
+        accentColor = "#303134";
+    }
+    else{
+        console.log("Brightness");
+        accentColor = "#dadada";
+    }
+
+    return accentColor;
+}
+
 function createHTMLElem(){
+
+    const bodyBackgroundColor = window.getComputedStyle(document.body).backgroundColor;
+    const accentColor = getAccentColor();
+    
+
+    
+    // Log the background color to the console
+    console.log('Background Color:', bodyBackgroundColor);
 
     //Primary area
 
     const resultBox = document.createElement("div");//biggest box that holds everything
         resultBox.id = "resultBox";
         resultBox.style.fontFamily = "Google Sans,arial,sans-serif";
-        resultBox.style.backgroundColor = "#ffffff";
-        resultBox.style.border = "2px solid #bababa";
+        resultBox.style.backgroundColor = bodyBackgroundColor;
+        resultBox.style.border = "2px solid " + accentColor;
         resultBox.style.borderRadius = "18px";
         resultBox.style.padding = "10px";
         resultBox.style.marginTop = "10px";
@@ -97,6 +142,7 @@ function makeGenerateButton(){
 
     //find box in 
     const resultBox = document.getElementById("resultBox");
+    const accentColor = getAccentColor();
     // const footer = document.getElementById("footer");
     
 
@@ -109,7 +155,7 @@ function makeGenerateButton(){
     button.style.paddingRight = "10px";
     button.style.borderRadius = "10px";
     button.style.fontSize = "14px";
-    button.style.backgroundColor = "#dadada";
+    button.style.backgroundColor = accentColor;
     button.style.border = "0";
     button.style.cursor = 'pointer';
     button.style.marginTop = "10px";
@@ -129,6 +175,7 @@ function makeInfoIcon(){
 
     const footer = document.getElementById("footer");
     const resultbox = document.getElementById("resultBox");
+    const accentColor = getAccentColor();
 
     const infoIcon = document.createElement('div');
     infoIcon.className = 'info-icon';
@@ -136,14 +183,15 @@ function makeInfoIcon(){
     infoIcon.style.display = 'inline-block';
     infoIcon.style.cursor = 'pointer';
     infoIcon.style.float = "right";
-    infoIcon.style.backgroundColor = "#dadada";
     infoIcon.style.borderRadius = "20px";
     infoIcon.style.marginTop = "10px";
     infoIcon.style.padding = "5px";
     infoIcon.style.paddingLeft = "11px";
     infoIcon.style.paddingRight = "11px";
     infoIcon.style.fontSize = "14px";
-    infoIcon.style.backgroundColor = "#dadada";
+    // infoIcon.style.backgroundColor = "#dadada";
+    infoIcon.style.backgroundColor = accentColor;
+
     infoIcon.style.border = "0";
 
     const iconSpan = document.createElement('span');
@@ -371,7 +419,7 @@ async function typeOutResult(text, element){
         
     for (let word of words){
         element.innerText += " " + word;
-        await delay(30);
+        await delay(25);
     }
 }
 
@@ -408,6 +456,8 @@ function openAiError(){
         
         const text = searchBox.textContent;
         const answerBox = document.getElementById("AnswerBox");
+
+
         
         answerBox.innerText = "Generating..."
 
