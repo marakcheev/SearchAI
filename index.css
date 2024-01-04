@@ -51,7 +51,7 @@ code {
 #topBar img {
     /* display: flex; */
     /* align-items: right; */
-    height: 48px; /* Adjust the height of the image */
+    height: 32px; /* Adjust the height of the image */
     /* margin-right: 0.5em; Add spacing between text and image */
 }
 
@@ -61,11 +61,11 @@ code {
 }
 
 h1 {
-    font-size: 3.2em;
-    line-height: 0.6;
+    font-size: 28px;
+    line-height: 0.5;
     padding-left: 15px;
-    padding-right: 155px;
-    margin-bottom: 20px;
+    padding-right: 215px;
+    margin-bottom: 15px;
     margin-top: 20px;
 }
 
