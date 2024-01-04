@@ -18,7 +18,7 @@ async function setFontSize(size){
 
 async function getFontSize(){
     const data = await chrome.storage.local.get("fontSize");
-    console.log("Retrieved font size");
+    console.log("Retrieved font size: " + data.fontSize);
     return data.fontSize;
 }
 
@@ -63,7 +63,7 @@ function getAccentColor(){
     return accentColor;
 }
 
-function createHTMLElem(){
+async function createHTMLElem(){
 
     const bodyBackgroundColor = window.getComputedStyle(document.body).backgroundColor;
     const accentColor = getAccentColor();
@@ -114,7 +114,7 @@ function createHTMLElem(){
         answerBox.style.paddingTop = "15px";
         // answerBox.style.color = "#535156";
         answerBox.className = "hgKElc";
-        answerBox.style.fontSize = getFontSize();
+        answerBox.style.fontSize = await getFontSize();
         answerBox.style.lineHeight = "22px";
 
     const footer = document.createElement("div");
@@ -306,7 +306,7 @@ async function callGpt(text, key){
 
 async function requestLongerResponse(originalrequest, gptAnswer, key){
     console.log("Calling GPT API...");
-    const gptQuery = "This is a follow up to a past conversation with prompt: \n'" + `You are a google search assistant. If the following search is a question, give a precise answer in under 3 sentences. If it asks to define something, define it in under 2 sentences. If it's anything else, give a short explanation of the topic (example person, place or thing) in under 3 sentences. Here's the question: '${originalrequest}'` + " \n and you answered: \n" + `'${gptAnswer}` + " \n ' Now give a more detailed response to the same question without repeating anything, simply add on to what you've said before. Hard limit: 7 sentences. ";
+    const gptQuery = "This is a follow up to a past conversation with prompt: \n'" + `You are a google search assistant. If the following search is a question, give a precise answer in under 3 sentences. If it asks to define something, define it in under 2 sentences. If it's anything else, give a short explanation of the topic (example person, place or thing) in under 3 sentences. Here's the question: '${originalrequest}'` + " \n and you answered: \n" + `'${gptAnswer}` + " \n ' Now give a more detailed response to the same question without repeating anything, simply add on to what you've said before. DO NOT REPEAT! Hard limit: 7 sentences. ";
 
     return getGPT(gptQuery, key);
 }
@@ -460,10 +460,10 @@ function openAiError(){
     // console.log(json.apiKey);
 
     const searchBox = document.querySelector("textarea");
-    // console.log("SearchGPT Start");
+    // console.log("SearchGPT Start");`
 
     if (searchBox) {
-        const elem = createHTMLElem("");
+        const elem = await createHTMLElem("");
         
         const text = searchBox.textContent;
         const answerBox = document.getElementById("AnswerBox");

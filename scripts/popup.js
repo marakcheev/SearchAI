@@ -52,6 +52,28 @@ document.addEventListener('DOMContentLoaded', async function() {
 
         // You can also send the API key to the background script or perform other actions here
     });
+
+    var smallButton = document.getElementById("leftButton");
+    var normalButton = document.getElementById("middleButton");
+    var largeButton = document.getElementById("rightButton");
+
+    smallButton.addEventListener('click', async function() {
+        const size = "12px";
+        await chrome.storage.local.set({fontSize: size});
+        console.log("Set font-size to " + size);
+    });
+
+    normalButton.addEventListener('click', async function() {
+        const size = "14px";
+        await chrome.storage.local.set({fontSize: size});
+        console.log("Set font-size to " + size);
+    });
+
+    largeButton.addEventListener('click', async function() {
+        const size = "16px";
+        await chrome.storage.local.set({fontSize: size});
+        console.log("Set font-size to " + size);
+    });
 });
 
 
