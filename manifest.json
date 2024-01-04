@@ -1,6 +1,6 @@
 {
     "manifest_version": 3,
-    "name": "SearchGPT",
+    "name": "SearchAI",
     "version": "1.0",
     "description": "Get AI results for any Google search.",
     "content_scripts": [

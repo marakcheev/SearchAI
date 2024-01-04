@@ -92,7 +92,7 @@ function createHTMLElem(){
 
         //Textbox "SearchGPT"
         const heading = document.createElement("h1");
-        heading.textContent = "SearchGPT";
+        heading.textContent = "SearchAI";
         heading.style.fontFamily = "Google Sans, arial,sans-serif";
         heading.style.fontSize = "22px";
         // heading.style.marginTop = "8px";
@@ -218,7 +218,7 @@ function makeInfoIcon(){
     tooltip.style.color = '#fff';
     tooltip.style.borderRadius = '8px';
     tooltip.style.padding = '8px';
-    tooltip.textContent = 'SearchGPT can make mistakes. Consider checking important information.';
+    tooltip.textContent = 'SearchAI can make mistakes. Consider checking important information.';
 
     // Append elements to the document
     infoIcon.appendChild(iconSpan);
@@ -246,6 +246,7 @@ async function getGPT(query, key){
         },
         body: JSON.stringify({
             model: 'gpt-3.5-turbo',
+            // model: 'gpt-4',
             messages: [{ role: 'user', content: query }]
         }),
     });
@@ -444,7 +445,7 @@ function openAiError(){
 (async() => {
     
 
-    console.log("searchGPT Start");
+    console.log("searchAI Start");
 
     // const answersList = await getAnswersList();
     // answersList.shift();

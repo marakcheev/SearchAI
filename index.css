@@ -1,0 +1,140 @@
+@font-face {
+    font-family: 'Product Sans Medium Regular';
+    font-style: normal;
+    font-weight: normal;
+    src: local('Product Sans Medium Regular'), url('ProductSans-Medium.woff') format('woff');
+    }
+
+:root {
+    /* font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif; */
+    /* font-family: Arial, sans-serif; */
+    font-family: "Product Sans Medium Regular", arial, sans-serif;
+    line-height: 1.5;
+    font-weight: 400;
+    width: 400px;
+    height: 250px;
+    display: flex;
+
+    color-scheme: light dark;
+    color: rgba(255, 255, 255, 0.87);
+    background-color: #242424;
+
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    -webkit-text-size-adjust: 100%;
+    overflow: hidden;
+
+    /* justify-content: center; */
+    /* align-items: center; */
+    margin: auto;
+}
+
+body{
+    font-family: "Product Sans Medium Regular", arial, sans-serif;
+}
+
+code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+        monospace;
+}
+
+#topBar {
+    display: flex;
+    /* display: flex; */
+    /* justify-content: baseline; */
+    align-items: center;
+    /* align-self: center; */
+}
+
+#topBar img {
+    /* display: flex; */
+    /* align-items: right; */
+    height: 48px; /* Adjust the height of the image */
+    /* margin-right: 0.5em; Add spacing between text and image */
+}
+
+#line {
+    margin-left: 2.5px;
+    width: 375px;
+}
+
+h1 {
+    font-size: 3.2em;
+    line-height: 0.6;
+    padding-left: 15px;
+    padding-right: 155px;
+    margin-bottom: 20px;
+    margin-top: 20px;
+}
+
+h3 {
+    font-family: inherit;
+    /* padding: 0.6em 1.2em; */
+    padding-left: 10px;
+    font-size: 1.2em;
+    /* font-weight: 500; */
+    margin: 5px;
+    padding-bottom: 5px;
+    padding-top: 5px;
+    display: inline-block;
+}
+
+#apiKeyInput{
+    padding-left: 6px;
+}
+
+p {
+    font-family: inherit;
+}
+
+#saveButton{
+    margin-right: 6px;
+}
+
+#apiKey{
+    width: 256px;
+}
+
+textarea,
+button,
+input {
+    /* margin-top: 4px; */
+    margin-right: 10px;
+    border-radius: 8px;
+    border: 1px solid transparent;
+    padding: 0.6em 1.2em;
+    font-size: 1.2em;
+    font-weight: 500;
+    font-family: inherit;
+    background-color: #1a1a1a;
+    cursor: pointer;
+    transition: border-color 0.25s;
+}
+
+button:hover {
+    border-color: #ffffff;
+}
+
+button:focus,
+button:focus-visible {
+    outline: 4px auto -webkit-focus-ring-color;
+}
+
+@media (prefers-color-scheme: light) {
+    :root {
+        color: #213547;
+        background-color: #ffffff;
+    }
+
+    a:hover {
+        color: #747bff;
+    }
+
+    button {
+        background-color: #f9f9f9;
+    }
+}
+
+
