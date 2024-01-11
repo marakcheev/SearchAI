@@ -213,7 +213,7 @@ function makeInfoIcon(){
     tooltip.style.position = 'absolute';
     tooltip.style.bottom = '100%';
     tooltip.style.width = "200px";
-    tooltip.style.transform = 'translateX(-50%)';
+    tooltip.style.transform = 'translateX(-90%)';
     tooltip.style.backgroundColor = '#333';
     tooltip.style.color = '#fff';
     tooltip.style.borderRadius = '8px';
@@ -227,12 +227,12 @@ function makeInfoIcon(){
 
     // Show the tooltip when hovering over the info icon
     infoIcon.addEventListener('mouseover', () => {
-      tooltip.style.display = 'block';
+        tooltip.style.display = 'block';
     });
 
     // Hide the tooltip when the mouse leaves the info icon
     infoIcon.addEventListener('mouseout', () => {
-      tooltip.style.display = 'none';
+        tooltip.style.display = 'none';
     });
 }
 
@@ -437,7 +437,7 @@ async function typeOutResult(text, element){
 function openAiError(){
     const answerBox = document.getElementById("AnswerBox");
     answerBox.innerText = "";
-    const openAIErrorMessage = " Error fetching data from OpenAI. Please try again at a later date."
+    const openAIErrorMessage = " Error fetching data from OpenAI. Try checking your OpenAI API Key in settings. We are sorry for the inconvenience that this may cause."
 
     typeOutResult(openAIErrorMessage, answerBox);
 }
