@@ -48,6 +48,19 @@ code {
     /* align-self: center; */
 }
 
+#onButton,
+#offButton{
+    width: 50px;
+    height: 30px;
+    padding: 0;
+    margin-right: 2px;
+}
+
+#offButton{
+    border-radius: 0 12px 12px 0;
+    margin-right: 5px;
+}
+
 #topBar img {
     /* display: flex; */
     /* align-items: right; */
@@ -64,7 +77,7 @@ h1 {
     font-size: 28px;
     line-height: 0.5;
     padding-left: 15px;
-    padding-right: 215px;
+    padding-right: 100px;
     margin-bottom: 15px;
     margin-top: 20px;
 }
@@ -148,7 +161,7 @@ button:hover {
 
 button:focus,
 button:focus-visible {
-    outline: 4px auto -webkit-focus-ring-color;
+    /* outline: 4px auto -webkit-focus-ring-color; */
 }
 
 @media (prefers-color-scheme: light) {

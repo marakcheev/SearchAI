@@ -22,6 +22,18 @@ async function getFontSize(){
     return data.fontSize;
 }
 
+async function setStatus(status){
+    await chrome.storage.local.set({ status: status }, () => {
+        console.log("Status set to " + status);
+    });
+} 
+
+async function getStatus(){
+    const data = await chrome.storage.local.get('status');
+    console.log("Retrieved status from storage" + data.status);
+    return data.status;
+}
+
 function getBackgroundColor(){
     return window.getComputedStyle(document.body).backgroundColor;
 }
@@ -442,8 +454,11 @@ function openAiError(){
     typeOutResult(openAIErrorMessage, answerBox);
 }
 
+
+//--------------ON RUN-----------------------------
+
 (async() => {
-    
+    // await setStatus(true);
 
     console.log("searchAI Start");
 
@@ -462,7 +477,12 @@ function openAiError(){
     const searchBox = document.querySelector("textarea");
     // console.log("SearchGPT Start");`
 
-    if (searchBox) {
+    if (await getStatus() === undefined){
+        setStatus(true);
+        setKey("");
+    }
+
+    if (searchBox && await getStatus()==true) {
         const elem = await createHTMLElem("");
         
         const text = searchBox.textContent;
