@@ -38,6 +38,18 @@ function getBackgroundColor(){
     return window.getComputedStyle(document.body).backgroundColor;
 }
 
+function isMainSearchPage(){
+    var targetDiv = document.querySelector('div.hdtb-mitem.hdtb-msel');
+    
+
+    if (targetDiv && targetDiv.textContent.includes('All')) {
+        console.log('Found the <div> element with class:', targetDiv, 'and "ALL"');
+        return true;
+        // Your additional code here...
+    } 
+    return false;
+}
+
 function isColorDark(backgroundColor) {
     // Extract RGB values from the background color string
     const match = backgroundColor.match(/^rgb\((\d+),\s*(\d+),\s*(\d+)\)$/);
@@ -457,18 +469,12 @@ function openAiError(){
 
 //--------------ON RUN-----------------------------
 
+
+
 (async() => {
     // await setStatus(true);
 
     console.log("searchAI Start");
-
-    // const answersList = await getAnswersList();
-    // answersList.shift();
-    // await chrome.storage.local.set({ answers: answersList }, () => {
-    //     console.log("Api key stored in chrome storage");
-    // });
-    
-    // setKey(" Enter Key Here");
 
     const apiKey = await getKey();
     // const json = await loadJson("secrets.json");
@@ -482,7 +488,9 @@ function openAiError(){
         setKey("");
     }
 
-    if (searchBox && await getStatus()==true) {
+    // Class that must contain "all" for it to be main search page: "hdtb-mitem" and "hdtb-msel"
+
+    if (searchBox && await getStatus()==true && isMainSearchPage()) {
         const elem = await createHTMLElem("");
         
         const text = searchBox.textContent;
