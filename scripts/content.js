@@ -483,7 +483,7 @@ function openAiError(){
     const searchBox = document.querySelector("textarea");
     // console.log("SearchGPT Start");`
 
-    if (await getStatus() === undefined){
+    if (await getStatus() == undefined){
         setStatus(true);
         setKey("");
     }

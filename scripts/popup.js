@@ -11,10 +11,24 @@ setKey = async (key) => {
 };
 
 getKey = async () => {
+    // return new Promise((resolve) => {
+    //     chrome.storage.local.get({apikey}, function(result) {
+    //         const apiKey = result.questions || []; // Use a default value in case questions is undefined
+    //         // const isSaved = questions.includes(question);
+    //         resolve(questionsList);
+    //         // callback(isSaved);
+    //     });
+    // }); 
+    
     const data = await chrome.storage.local.get('apikey');
     console.log("Retrieved api key from storage");
-    return data.apikey;
+    return data.apikey || "";
 };
+
+async function setFontSize(size){
+    await chrome.storage.local.set({fontSize: size});
+    console.log("Set font-size to " + size);
+}
 
 async function getFontSize(){
     const data = await chrome.storage.local.get("fontSize");
@@ -47,6 +61,8 @@ function censorKey(apiKey){
     return `${firstThree}${censoredMiddle}${lastThree}`;
 }
 
+
+
 document.addEventListener('DOMContentLoaded', async function() {
     const apiKey = await getKey();
     // document.getElementById('apiKey').value = censorKey(apiKey);
@@ -62,9 +78,14 @@ document.addEventListener('DOMContentLoaded', async function() {
         onButton.style.backgroundColor = "#444445";
         offButton.style.backgroundColor = "#303134";
     }
+    else if (await getStatus() == false){
+        onButton.style.backgroundColor = "#303134";
+        offButton.style.backgroundColor = "#444445";
+    }
     else{
         onButton.style.backgroundColor = "#303134";
         offButton.style.backgroundColor = "#444445";
+        setStatus(false);
     }
 
 
@@ -103,6 +124,12 @@ document.addEventListener('DOMContentLoaded', async function() {
     
             if (notWhitespace(newApiKey)){
                 setKey(newApiKey);
+                
+                setStatus(true);
+                onButton.style.backgroundColor = "#444445";
+                offButton.style.backgroundColor = "#303134";
+                
+                
                 buttonState = 2;
                 saveButton.textContent = "Clear"
             }
@@ -113,8 +140,8 @@ document.addEventListener('DOMContentLoaded', async function() {
         else if (buttonState == 2){
             apiBox.value = "";
             setKey("");
-            buttonState = 2;
-        saveButton.textContent = "Save"
+            buttonState = 1;
+            saveButton.textContent = "Save"
         }
         // Get the value from the text box
         
@@ -139,8 +166,13 @@ document.addEventListener('DOMContentLoaded', async function() {
     }
     else if(await getFontSize() == "14px"){
         brightenFontButton(normalButton);
-    }else{
+    }
+    else if(await getFontSize() == "16px"){
         brightenFontButton(largeButton);
+    }
+    else{
+        await setFontSize("14px");
+        brightenFontButton(normalButton);
     }
 
     smallButton.addEventListener('click', async function() {
