@@ -12,7 +12,7 @@ SearchAI is a Chrome extension designed to enhance your new tab experience by in
 
 ## Installation
 
-1. Clone this repository or download the ZIP file.
+1. Clone this repository **or** download and extract the ZIP file.
 
 ```bash
   git clone https://github.com/marakcheev/SearchAI.git
