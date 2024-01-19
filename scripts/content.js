@@ -39,10 +39,10 @@ function getBackgroundColor(){
 }
 
 function isMainSearchPage(){
-    var targetDiv = document.querySelector('div.hdtb-mitem.hdtb-msel');
+    var targetDiv = document.querySelector('div.IUOThf');
     
 
-    if (targetDiv && targetDiv.textContent.includes('All')) {
+    if (targetDiv /*&& !targetDiv.textContent.includes('All')*/) {
         console.log('Found the <div> element with class:', targetDiv, 'and "ALL"');
         return true;
         // Your additional code here...
