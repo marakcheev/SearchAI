@@ -87,6 +87,13 @@ function getAccentColor(){
     return accentColor;
 }
 
+//
+
+//---------------------------------------------------------------------------------------------------------
+
+//
+
+
 async function createHTMLElem(){
 
     const bodyBackgroundColor = window.getComputedStyle(document.body).backgroundColor;
@@ -260,6 +267,13 @@ function makeInfoIcon(){
     });
 }
 
+//
+
+//---------------------------------------------------------------------------------------------------------
+
+//
+
+
 async function getGPT(query, key){
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
         method: 'POST',
@@ -336,9 +350,11 @@ async function requestLongerResponse(originalrequest, gptAnswer, key){
 }
 
 
+//
 
-//----------------------------------------------------
-//Saving Questions
+//---------------------------------------------------------------------------------------------------------
+
+//
 
 
 async function saveQuestionAndAnswer(question, answer) {
@@ -442,8 +458,12 @@ async function removeOldQandA(){
 
 
 
+//
 
-//----------------------------------------------------
+//---------------------------------------------------------------------------------------------------------
+
+//
+
 
 function delay(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -467,8 +487,11 @@ function openAiError(){
 }
 
 
-//--------------ON RUN-----------------------------
+//
 
+//---------------------------------------------------------------------------------------------------------
+
+//
 
 
 (async() => {
