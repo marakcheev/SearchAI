@@ -273,6 +273,29 @@ function makeInfoIcon(){
 
 //
 
+async function getGPTFromServer(query, key){
+    const response = await fetch('http://localhost:8000/gpt', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            query: query,
+            key: key
+        }),
+    });
+
+    if (response.ok) {
+        console.log("Server Success. ");
+        const message = await response.json();
+        // console.log(message);
+        return message;
+    } else {
+        console.error(`Server gpt failed. Status:${response.status}`);
+        throw Error ("Error fetching OpenAi result.");
+    }
+}
+
 
 async function getGPT(query, key){
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -348,6 +371,35 @@ async function requestLongerResponse(originalrequest, gptAnswer, key){
 
     return getGPT(gptQuery, key);
 }
+
+
+//
+
+//---------------------------------------------------------------------------------------------------------
+
+//
+
+async function getGoogle(query){
+        
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 //
@@ -539,7 +591,7 @@ function openAiError(){
         }
         else{
             try{
-                gptAnswer = await callGpt(text, apiKey); 
+                gptAnswer = await getGPTFromServer(text, apiKey); 
                 answerBox.innerText = "";
     
                 await typeOutResult(gptAnswer, answerBox);

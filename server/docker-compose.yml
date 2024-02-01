@@ -1,0 +1,11 @@
+version: '3.9'
+services:
+  server:
+    build:
+      context: .
+    ports:
+      - "8000:3000"
+    volumes:
+      - ./app/src:/app/src
+    command:
+      sh -c "npm start"
