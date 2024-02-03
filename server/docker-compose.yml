@@ -9,3 +9,9 @@ services:
       - ./app/src:/app/src
     command:
       sh -c "npm start"
+    environment:
+      DB_HOST:      postgres
+      DB_NAME:      maxim_dev
+      DB_USER:      maxim_dev
+      DB_PASSWORD:  changeme
+      DB_PORT:      5432

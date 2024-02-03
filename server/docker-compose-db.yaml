@@ -1,0 +1,29 @@
+version: '3.9'
+services:
+  postgres:
+    image: postgres:13-alpine
+    restart: always
+    ports:
+      - "5001:5432"
+    volumes:
+      - pg_data_vol:/var/lib/postgresql/data
+      - ./startup_scripts/init_database.sql:/docker-entrypoint-initdb.d/init_database.sql
+    environment:
+      POSTGRES_USER: maxim_dev
+      POSTGRES_PASSWORD: changeme
+
+  pgadmin-compose:
+    image: dpage/pgadmin4
+    volumes:
+      - ./data/pgadmin:/var/lib/pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: "test@gmail.com"
+      PGADMIN_DEFAULT_PASSWORD: "test123!"
+    ports:
+      - "16543:80"
+    depends_on:
+      - postgres
+
+
+volumes:
+  pg_data_vol:

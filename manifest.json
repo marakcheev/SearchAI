@@ -32,6 +32,6 @@
         "128": "images/icon-128.png"
     },
     "content_security_policy": {
-		"extension_pages": "default-src 'self'; connect-src 'self' http://localhost:8000;"
+		"extension_pages": "default-src 'self'; connect-src 'self' http://localhost:8000; img-src 'self' data:;"
 	}
 }
