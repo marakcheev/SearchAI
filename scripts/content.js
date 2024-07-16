@@ -1,3 +1,4 @@
+import OpenAI from "openai";
 
 setKey = async (key) => {
     await chrome.storage.local.set({ apikey: key }, () => {
@@ -39,10 +40,24 @@ function getBackgroundColor(){
 }
 
 function isMainSearchPage(){
-    var targetDiv = document.querySelector('div.IUOThf');
+    // Find the element with text "All"
+    let elements = document.querySelectorAll("div");
+
+    let isSelected = false;
+    elements.forEach(element => {
+        if (element.textContent.trim() === "All" && element.getAttribute("selected") !== null) {
+            isSelected = true;
+        }
+    });
+
+    console.log("BRAPAPAP " + isSelected);
+
+    return isSelected;
+    
+    // var targetDiv = document.querySelector('div.YmvwI');
     
 
-    if (targetDiv /*&& !targetDiv.textContent.includes('All')*/) {
+    if (/*targetDiv && !targetDiv.textContent.includes('All')*/isSelected) {
         console.log('Found the <div> element with class:', targetDiv, 'and "ALL"');
         return true;
         // Your additional code here...
@@ -272,55 +287,56 @@ function makeInfoIcon(){
 //---------------------------------------------------------------------------------------------------------
 
 //
-
-async function getGPTFromServer(query, key){
-    const response = await fetch('http://localhost:8000/gpt', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-            query: query,
-            key: key
-        }),
-    });
-
-    if (response.ok) {
-        console.log("Server Success. ");
-        const message = await response.json();
-        // console.log(message);
-        return message;
-    } else {
-        console.error(`Server gpt failed. Status:${response.status}`);
-        throw Error ("Error fetching OpenAi result.");
-    }
-}
-
+const openai = new OpenAI({
+    organization: "org-rCtMskOVcgJlRhPK1CyW0T8N",
+    project: "proj_iewF4PE3Y4oqduzf3KQBGJCM",
+});
 
 async function getGPT(query, key){
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        mode: 'cors',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${key}`,
-        },
-        body: JSON.stringify({
+    try {
+        const response = await openai.chat.completions.create({
             model: 'gpt-3.5-turbo',
             // model: 'gpt-4',
-            messages: [{ role: 'user', content: query }]
-        }),
-    });
+            messages: [{ role: 'user', content: query }],
+        });
 
-    if (response.ok) {
-        console.log("GPT Success. ");
-        const data = await response.json();
-        console.log(data.choices[0].message.content);
-        return data.choices[0].message.content;
-    } else {
-        console.error(`GPT failed. Status:${response.status}`);
-        throw Error ("Error fetching OpenAi result.");
+        console.log("GPT Success: ", response.choices[0].message.content);
+        return response.choices[0].message.content;
+    } catch (error) {
+        if (error.status === 429) {
+            console.warn("Rate limit exceeded. Implement retry logic here.");
+        } else {
+            console.error(`GPT failed. Status: ${error.status}, Message: ${error.message}`);
+        }
+        throw new Error("Error fetching OpenAI result.");
     }
+
+
+
+
+    // const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    //     method: 'POST',
+    //     mode: 'cors',
+    //     headers: {
+    //         'Content-Type': 'application/json',
+    //         'Authorization': `Bearer ${key}`,
+    //     },
+    //     body: JSON.stringify({
+    //         model: 'gpt-4o',
+    //         // model: 'gpt-4',
+    //         messages: [{ role: 'user', content: query }]
+    //     }),
+    // });
+
+    // if (response.ok) {
+    //     console.log("GPT Success. ");
+    //     const data = await response.json();
+    //     console.log(data.choices[0].message.content);
+    //     return data.choices[0].message.content;
+    // } else {
+    //     console.error(`GPT failed. Status:${response.status}`);
+    //     throw Error ("Error fetching OpenAi result.");
+    // }
 }
 
 //Bold after asterisk
@@ -371,35 +387,6 @@ async function requestLongerResponse(originalrequest, gptAnswer, key){
 
     return getGPT(gptQuery, key);
 }
-
-
-//
-
-//---------------------------------------------------------------------------------------------------------
-
-//
-
-async function getGoogle(query){
-        
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 //
@@ -591,7 +578,7 @@ function openAiError(){
         }
         else{
             try{
-                gptAnswer = await getGPTFromServer(text, apiKey); 
+                gptAnswer = await callGpt(text, apiKey); 
                 answerBox.innerText = "";
     
                 await typeOutResult(gptAnswer, answerBox);
